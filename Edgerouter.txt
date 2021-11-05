@@ -1,0 +1,32 @@
+# Edgrouter configuration for an IPSEC Tunnel
+# Change the <secret> with your own secret
+
+set vpn ipsec auto-firewall-nat-exclude enable
+
+set vpn ipsec esp-group FOO0 lifetime 3600
+set vpn ipsec esp-group FOO0 pfs disable
+set vpn ipsec esp-group FOO0 proposal 1 encryption aes256
+set vpn ipsec esp-group FOO0 proposal 1 hash sha1
+
+set vpn ipsec ike-group FOO0 key-exchange ikev2
+set vpn ipsec ike-group FOO0 lifetime 3600
+
+set vpn ipsec ike-group FOO0 proposal 1 dh-group 2
+set vpn ipsec ike-group FOO0 proposal 1 encryption aes256
+set vpn ipsec ike-group FOO0 proposal 1 hash sha1
+
+set vpn ipsec site-to-site peer 51.124.200.67 authentication mode pre-shared-secret
+set vpn ipsec site-to-site peer 51.124.200.67 authentication pre-shared-secret <secret>
+set vpn ipsec site-to-site peer 51.124.200.67 connection-type respond
+set vpn ipsec site-to-site peer 51.124.200.67 description IPsecAzure
+set vpn ipsec site-to-site peer 51.124.200.67 ike-group FOO0
+set vpn ipsec site-to-site peer 51.124.200.67 local-address 31.1.12.227
+
+set vpn ipsec site-to-site peer 51.124.200.67 vti bind vti0
+set vpn ipsec site-to-site peer 51.124.200.67 vti esp-group FOO0
+set interfaces vti vti0
+set protocols static interface-route 10.2.0.0/16 next-hop-interface vti0
+
+set firewall options mss-clamp interface-type vti
+set firewall options mss-clamp mss 1350
+set system offload ipsec enable 
