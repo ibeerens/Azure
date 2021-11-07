@@ -55,7 +55,7 @@ $subnet = Get-AzVirtualNetworkSubnetConfig -Name 'GatewaySubnet' -VirtualNetwork
 $gwipconfig = New-AzVirtualNetworkGatewayIpConfig -Name gwipconfig1 -SubnetId $subnet.Id -PublicIpAddressId $gwpip.Id
 
 # Create a Site to Site VPN gateway
-Write-Host "Creating a VPN gateway can take up to 45 minutes" -ForegroundColor Green
+Write-Host "Creating the VPN gateway. This can take up to 45 minutes!" -ForegroundColor Green
 New-AzVirtualNetworkGateway -Name $gatewayname -ResourceGroupName $rg_vpn `
 -Location $location -IpConfigurations $gwipconfig -GatewayType $gatewayType `
 -VpnType $vpntype -GatewaySku $sku
