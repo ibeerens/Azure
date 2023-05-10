@@ -36,4 +36,5 @@
   - Boot diagnostics storage account
   - Tags
   - The time the VM was created
+
 The output will be displayed in the console, to a PS Gridview and saved to a CSV file
