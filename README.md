@@ -1,8 +1,8 @@
-# Azure
-
-## Azure scripts
+# Azure Scripts
 ---
-- *Edgerouter.txt*
+- *Edgerouter.txt* - Edgrouter commands for creating a Site to Site VPN. More information: https://www.ivobeerens.nl/2021/11/08/create-a-site-to-site-vpn-to-microsoft-azure/
+- *pair-vnets.ps1* - Pair VNets. More information: https://www.ivobeerens.nl/2021/11/08/create-a-site-to-site-vpn-to-microsoft-azure/ 
+- *vpm-2s2.ps1* - Create Site to Site VPN script. More information: https://www.ivobeerens.nl/2021/11/08/create-a-site-to-site-vpn-to-microsoft-azure/ 
 - *adconnect-sync.ps1* - Performs a AD Connect delta sync
 - *azurevm-inventory.ps1* - This script will do a inventory of all VMs in a subscription. The following VM information is displayed: 
   - Name
@@ -38,6 +38,4 @@
   - The time the VM was created
 
 The output will be displayed in the console, to a PS Gridview and saved to a CSV file
-
-- *pair-vnets.ps1* - Pair VNets
-- *vpm-2s2.ps1 - Create Site to Site VPN script
+---
