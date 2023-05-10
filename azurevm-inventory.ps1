@@ -96,14 +96,10 @@ foreach ($vm in $vms) {
     $disknames1 = $vm.StorageProfile.DataDisks
     
     if ($disknames -ne 0) {
-            #Write-Host "$diskNames1"
-            #$datadisk_temp = $disknames1.Name + $disknames1.DiskSizeGB #+ "GB --- " + " ; `r`n "
-            #$datadisks = $datadisk_temp
             $datadisks = $disknames -join ","
         } 
     else {
             $datadisks = "No data disks attached."
-            # $datadisks
         }
     
     # Boot Diagnostics
