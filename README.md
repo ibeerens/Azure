@@ -1,7 +1,8 @@
 # Azure
-Azure scripts
 
-azurevm-inventory.ps1 - This script will do a inventory of all VMs in a subscription. The following VM information is displayed: 
+## Azure scripts
+
+**azurevm-inventory.ps1** - This script will do a inventory of all VMs in a subscription. The following VM information is displayed: 
   - Name
   - PowerState
   - Region
