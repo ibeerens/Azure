@@ -14,7 +14,7 @@
     PS> ./azurevm-inventory.ps1
 .NOTES
     Change the outputpath variable if needed
-    After running this script a seperate window will appear to select the subscription
+    After running this script a seperate window will appear to select the Azure subscription
     The output will be displayed in the console, to a gridview and saved to a csv file
 #>
 
@@ -130,9 +130,9 @@ foreach ($vm in $vms) {
     $vmObject = [PSCustomObject]@{
         "Name" = $name
         "PowerState"= $powerstate
-        "Location" = $location
+        "Region" = $location
         "Resource Group" = $resourcegroupname
-        "VMSize" = $vmsize
+        "VM Size" = $vmsize
         "CPU_Cores" = $cores
         "MemoryMB" = $memory
         "OS" = $os
@@ -145,12 +145,12 @@ foreach ($vm in $vms) {
         "OS_Name" = $os_name
         "OS_Version" = $os_version
         "NIC_Name" = $nicname
-        "vNet" = $vnet
+        "VNet" = $vnet
         "Private_IP" = $private_ip
         "Public_IP" = $publicipAddress.IpAddress
         "OS_Disk_Name" = $osdisk.Name
         "OS_Disk_Size_GB" = $osdisk.DiskSizeGB
-        "OS_Storage_Account_Type" = $osdisk.ManagedDisk.StorageAccountType
+        "OS_Storage_Type" = $osdisk.ManagedDisk.StorageAccountType
         "OS_Disk_Caching" = $osdisk_caching
         "Datadisks_Count" = $datadiskcount 
         "Datadisks" =  $datadisks
