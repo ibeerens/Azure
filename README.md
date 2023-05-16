@@ -37,4 +37,4 @@
   - Tags
   - The time the VM was created
 
-The output will be displayed in the console, to a PS Gridview, and saved to a CSV file
+The output will be displayed in the console, to a PS Gridview, and saved to a CSV file. More information: https://www.ivobeerens.nl/2023/05/16/perform-an-azure-vm-inventory/
