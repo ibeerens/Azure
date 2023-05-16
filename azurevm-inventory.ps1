@@ -96,7 +96,6 @@ foreach ($vm in $vms) {
     $osdisk_caching = $vm.StorageProfile.OsDisk.Caching
     $datadiskcount = $vm.StorageProfile.DataDisks.count
     $disknames = $vm.StorageProfile.DataDisks.Name
-    $disknames1 = $vm.StorageProfile.DataDisks
     
     if ($disknames -ne 0) {
             $datadisks = $disknames -join ","

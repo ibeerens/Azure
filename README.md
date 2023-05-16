@@ -12,6 +12,7 @@
   - VM Size
   - CPU Cores
   - Memory (MB)
+  - License Type
   - Operating System
   - Offer
   - SKU
