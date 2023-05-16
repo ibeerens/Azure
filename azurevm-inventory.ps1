@@ -19,10 +19,13 @@
 #>
 
 # Variables
-$VerbosePreference = 'Continue'
+#$VerbosePreference = 'Continue'
 $datetime = $((Get-Date).ToString('yyyy-MM-dd_hh-mm-ss'))
 $outputpath = "$env:USERPROFILE\Documents\Reports\Azure\VMs"
 $vms = Get-AzVM
+
+# Controls if warning messages for breaking changes are displayed or suppressed
+Update-AzConfig -DisplayBreakingChangeWarning $false
 
 If ( -Not (Test-Path -Path $outputPath)) {
     New-Item -ItemType directory -Path $outputPath
@@ -31,9 +34,7 @@ If ( -Not (Test-Path -Path $outputPath)) {
 Set-Location $outputPath
 $outputfile = "Inventory-AzureVMs-$dateTime"
 
-
 # AZ PowerShell module check
-Clear
 $latest_azmod = Find-Module -Name Az -Repository PSGallery
 $installed_azmod = Get-InstalledModule -Name Az -ErrorAction SilentlyContinue
 $update = ($latest_azmod.Version -gt $installed_azmod.Version)
@@ -43,7 +44,8 @@ if (Get-Module -ListAvailable -Name az) {
 } 
 else {
     Write-Host "The Module does not exist"
-    Install-Module -Name Az -Force -AllowClobber -Verbose
+    Install-Module -Name Az -Force -AllowClobber 
+    #-Verbose
 }
 
 if ($update -eq "True") {
@@ -54,23 +56,24 @@ else {
     Write-Verbose "No upgrade of the AZ module needed"
 }
 
+
+# Import Module
+Import-Module Az -DisableNameChecking
+
 # Azure Login
 Write-Verbose "Connecting to Azure Account" 
 try {
     Connect-AzAccount 
-    # -Tenant $tenantid -ErrorAction Stop | Out-Null
-    # Connect-AzAccount -Subscription '' -Tenant ''
     Write-Verbose "Connected to Azure" 
 }
 catch {
     Write-Verbose "Failed to connect to Azure. Exit script" 
-    Write-Verbose 
     StopIteration
     Exit 1
 }
 
 # Select Subscription
-Get-AzSubscription | Out-GridView -PassThru | Select-AzSubscription
+Get-AzSubscription | Out-GridView -PassThru -Title "Select Suibscription" | Select-AzSubscription
 
 # VM Inventory
 $object = @()
@@ -85,7 +88,7 @@ foreach ($vm in $vms) {
     $resourcegroupname = $vm.ResourceGroupName
     $vmsize = $vm.HardwareProfile.VmSize
     # Get the type, number of Cores, Memory and OSDisksize
-    $vmsizing = Get-AzVMSize -VMName $vm.Name -ResourceGroupName $vm.ResourceGroupName | where {$_.Name -eq $vmsize}
+    $vmsizing = Get-AzVMSize -VMName $vm.Name -ResourceGroupName $vm.ResourceGroupName | Where-Object {$_.Name -eq $vmsize}
     $cores = $vmsizing.NumberOfCores
     $memory = $vmsizing.MemoryInMB
     # Disks
@@ -131,6 +134,7 @@ foreach ($vm in $vms) {
         "VM Size" = $vmsize
         "CPU_Cores" = $cores
         "MemoryMB" = $memory
+        "License Type" = $licensetype
         "OS" = $os
         "Offer" = $offer 
         "SKU" = $sku
@@ -161,4 +165,4 @@ foreach ($vm in $vms) {
 
 $object
 $object | Out-GridView
-$object | Export-Csv "$Outputfile.csv" -NoTypeInformation -UseCulture
+$object | Export-Csv -Path "$Outputfile.csv" -NoTypeInformation -UseCulture
