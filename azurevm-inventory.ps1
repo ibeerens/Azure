@@ -73,7 +73,7 @@ catch {
 }
 
 # Select Subscription
-Get-AzSubscription | Out-GridView -PassThru -Title "Select Suibscription" | Select-AzSubscription
+Get-AzSubscription | Out-GridView -PassThru -Title "Select Subscription" | Select-AzSubscription
 
 # VM Inventory
 $object = @()
@@ -87,7 +87,7 @@ foreach ($vm in $vms) {
     $licensetype = $vm.LicenseType
     $resourcegroupname = $vm.ResourceGroupName
     $vmsize = $vm.HardwareProfile.VmSize
-    # Get the type, number of Cores, Memory and OSDisksize
+    # Get the type, number of Cores, Memory, and OSDisksize
     $vmsizing = Get-AzVMSize -VMName $vm.Name -ResourceGroupName $vm.ResourceGroupName | Where-Object {$_.Name -eq $vmsize}
     $cores = $vmsizing.NumberOfCores
     $memory = $vmsizing.MemoryInMB
