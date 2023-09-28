@@ -21,7 +21,7 @@
 # Variables
 #$VerbosePreference = 'Continue'
 $datetime = $((Get-Date).ToString('yyyy-MM-dd_hh-mm-ss'))
-$outputpath = "$env:USERPROFILE\Documents\Reports\Azure\VMs"
+$outputpath = ("{0}\Reports\Azure\VMs" -f [Environment]::GetFolderPath("MyDocuments"))
 
 # Controls if warning messages for breaking changes are displayed or suppressed
 Update-AzConfig -DisplayBreakingChangeWarning $false
@@ -78,7 +78,7 @@ if (-not (Get-AzContext)){
 # Select Subscription
 $subscriptions = [array](Get-AzSubscription | Out-GridView -PassThru -Title "Select Subscription")
 
-$object = @()
+$object = $diskObjects = @()
 
 foreach ($subscription in $subscriptions){
 
@@ -172,10 +172,44 @@ foreach ($subscription in $subscriptions){
 		}
 		$object += $vmObject
 	}
+
+	# Disk Inventory
+	$disks = Get-AzDisk
+	foreach ($disk in $disks) {
+		$name = $disk.Name
+		$location = $disk.Location
+		$disksizeGB = $disk.DiskSizeGB
+		$diskSizeBytes = $disk.DiskSizeBytes
+		$tier = $disk.Tier
+		$iops = $disk.DiskIOPSReadWrite
+		$sku = $disk.Sku.Name
+		$tags = ($disk.Tags | ConvertTo-json)
+		$networkAccessPolicy = $disk.NetworkAccessPolicy
+		$provisioningState = $disk.ProvisioningState
+		$diskState = $disk.DiskState
+		$publicNetworkAccess = $disk.PublicNetworkAccess
+
+		$diskObject = [PSCustomObject]@{
+			"Subscription" = $subscription.Name
+			"Name" = $name
+			"SKU" = $sku
+			"Tier" = $tier
+			"Iops" = $iops
+			"DiskSizeGB" = $disksizeGB
+			"DiskSizeBytes" = $disksizeBytes
+			"Tags" = $tags
+			"NetworkAccessPolicy" = $networkAccessPolicy
+			"ProvisioningState" = $provisioningState
+			"DiskState" = $diskState
+			"PublicNetworkAccess" = $publicNetworkAccess
+		}
+		$diskObjects += $diskObject
+	}
 }
 
 $object
 $object | Out-GridView
 $object | Export-Csv -Path "$Outputfile.csv" -NoTypeInformation -UseCulture
+$diskObjects | Export-Csv -Path "$Outputfile-Disks.csv" -NoTypeInformation -UseCulture
 
 Pop-location
